@@ -1,11 +1,6 @@
 import os
 from flask import Flask, request, jsonify
-import requests
-import json
-
-
-
-from VWB import bot, tools, tg_methods as tg
+from VWB import bot
 from VWB import tools
 
 
@@ -22,17 +17,17 @@ def webhook():
     if request.method == 'POST':
         update = request.get_json()
         tools.log_json(update, 'updates.log')
-        bot.handleUpdate(update)
+        bot.handle_update(update)
         return jsonify(update)
     return 'hi'
 
 
 @app.route('/auth', methods=['GET'])
 def auth():
-    #auth
     return 'Yay'
 
-@app.route('/start', methods=['POST', 'GET']) # :)
+
+@app.route('/start', methods=['POST', 'GET'])  # :)
 def start():
     bot.start_bot()
     return 'Yay'
@@ -45,6 +40,3 @@ if __name__ == '__main__':
         bot.start_bot()
     except Exception as e:
         tools.log_err(e, 'errors.log')
-    #app.run(host='127.0.0.1', port=8080)
-
-
