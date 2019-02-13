@@ -75,7 +75,11 @@ def parse_posts(posts):
     for item in posts['response']['items']:
         post = Post()
         post.id = item['post_id']
-        post.group_name = get_group_name(abs(item['source_id']))
+        source_id = item['source_id']
+        if source_id < 0:
+            post.group_name = get_group_name(abs(source_id))
+        else:
+            post.group_name = get_user_name(source_id)
         post.text = item['text']
         post.link = f'https://vk.com/wall{item["source_id"]}_{post.id}'
         if 'attachments' in item:
@@ -155,3 +159,19 @@ def get_group_name(group_id):
            f'&access_token={VK_ACCESS_TOKEN}&v=5.80')
     group = requests.get(url)
     return group.json()['response'][0]['name']
+
+
+def get_user_name(user_id: int):
+    """
+    Return user by id.
+
+    Args:
+    user_id -- VK user ID
+    """
+    url = (f'{VK_BASE_URL}users.get?users_id={user_id}' +
+           f'&fields=nickname,screen_name' +
+           f'&access_token={VK_ACCESS_TOKEN}&v=5.80')
+    group = requests.get(url)
+    response = group.json()['response'][0]
+    full_name = f'{response["first_name"]} {response["last_name"]}'
+    return full_name
