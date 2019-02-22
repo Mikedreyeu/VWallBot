@@ -36,6 +36,7 @@ def start():
 if __name__ == '__main__':
     tools.init_tokens('VWB/tokens.txt')
     os.makedirs('VWB/logs', exist_ok=True)
+    open('VWB/start_time_tmp.txt', 'a').close()
     try:
         bot.start_bot()
     except Exception as e:
