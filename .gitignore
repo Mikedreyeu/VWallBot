@@ -4,3 +4,4 @@ logs/
 tokens.txt
 venv/
 nohup.out
+start_time_tmp.txt
