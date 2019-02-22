@@ -42,7 +42,6 @@ def send_posts(chat_id, posts):
         docs_count = len(post.docs)
         photos_count = len(post.photos)
         text = post.text
-        text_is_fitable = True
         text = '<b>{}</b>\n'.format(post.group_name) + text
 
         if post.attached_link is not None:
@@ -55,29 +54,19 @@ def send_posts(chat_id, posts):
             text += '\n[VWallBot: VK Photo List]'
         if post.has_audio is True:
             text += '\n[VWallBot: VK Audio]'
-        if len(text) > 200:
-            text_is_fitable = False
 
         for video in post.videos:
             text += '\n' + video
 
         if docs_count == 1 and photos_count == 0:
-            if text_is_fitable is True:
-                tg.send_document(chat_id, post.docs[0], text, post.link)
-            else:
-                tg.send_document(chat_id, post.docs[0])
-                tg.send_message(chat_id, text, post.link)
+            tg.send_document(chat_id, post.docs[0], text, post.link)
         elif docs_count > 1 and photos_count == 0:
             for doc in post.docs:
                 tg.send_document(chat_id, doc)
             tg.send_message(chat_id, text, post.link)
 
         elif photos_count == 1 and docs_count == 0:
-            if text_is_fitable is True:
-                tg.send_photo(chat_id, post.photos[0], text, post.link)
-            else:
-                tg.send_photo(chat_id, post.photos[0])
-                tg.send_message(chat_id, text, post.link)
+            tg.send_photo(chat_id, post.photos[0], text, post.link)
         elif photos_count > 1 and docs_count == 0:
             tg.send_media_group(chat_id, convert_to_im(post.photos, 'photo'))
             tg.send_message(chat_id, text, post.link)
