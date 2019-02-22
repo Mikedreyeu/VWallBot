@@ -1,7 +1,7 @@
 .idea
 __pycache__
 logs/
-tokens.txt
+tokens.json
 venv/
 nohup.out
 start_time_tmp.txt

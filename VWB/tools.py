@@ -20,6 +20,8 @@ def log_err(e, filename):
 
 def init_tokens(filename):
     """ Initialize API tokens"""
-    with open(filename, 'r') as token_file:
-        tg.BOT_TOKEN = token_file.readline()[:-1]
-        vk.VK_ACCESS_TOKEN = token_file.readline()
+    with open(filename) as token_file:
+        data = json.load(token_file)
+        tg.BOT_TOKEN = data['telegram']
+        vk.VK_ACCESS_TOKEN = data['vk']
+        print(data)

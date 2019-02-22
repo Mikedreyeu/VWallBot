@@ -34,7 +34,7 @@ def start():
 
 
 if __name__ == '__main__':
-    tools.init_tokens('VWB/tokens.txt')
+    tools.init_tokens('VWB/tokens.json')
     os.makedirs('VWB/logs', exist_ok=True)
     open('VWB/start_time_tmp.txt', 'a').close()
     try:
