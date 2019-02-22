@@ -18,9 +18,7 @@ def make_request(method, message):
     """
     url = f'{BASE_URL}{BOT_TOKEN}/{method}'
     post = requests.post(url, json=message)
-    post = post.json()
-    tools.log_json(post, 'request_replies.log')
-    return post
+    return post.json()
 
 
 def append_inline_link(message, inline_url, inline_text):
