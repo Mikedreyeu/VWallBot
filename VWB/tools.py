@@ -24,4 +24,3 @@ def init_tokens(filename):
         data = json.load(token_file)
         tg.BOT_TOKEN = data['telegram']
         vk.VK_ACCESS_TOKEN = data['vk']
-        print(data)
