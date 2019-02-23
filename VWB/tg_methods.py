@@ -39,8 +39,11 @@ def append_inline_link(message, inline_url, inline_text):
 """Down below are Bot API methods"""
 
 
-def send_message(chat_id, text, inline_url=None, inline_text='VK link'):
-    message = {'chat_id': chat_id, 'text': text, 'parse_mode': 'HTML'}
+def send_message(chat_id, text, inline_url=None,
+                 inline_text='VK link', html=True):
+    message = {'chat_id': chat_id, 'text': text}
+    if html is True:
+        message['parse_mode'] = 'HTML'
     if inline_url is not None and inline_text is not None:
         message = append_inline_link(message, inline_url, inline_text)
     return make_request('sendMessage', message)
