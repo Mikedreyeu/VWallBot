@@ -1,6 +1,6 @@
 import requests
 import re
-from VWB import bot
+from VWB import bot, tools
 import time
 
 
@@ -131,7 +131,12 @@ def parse_video(video):
     url = (f'{VK_BASE_URL}video.get?owner_id={video["owner_id"]}' +
            f'&videos={video["owner_id"]}_{video["id"]}_{video["access_key"]}' +
            f'&count=1&extended=0&v=5.80&access_token={VK_ACCESS_TOKEN}')
-    video_obj = requests.get(url).json()['response']['items'][0]
+    try:
+        video_obj = requests.get(url).json()['response']['items'][0]
+    except KeyError as e:
+        tools.log_err(e, 'errors.log')
+        return url
+
     video_url = video_obj['player']
     try:
         video_platform = video_obj['platform'].lower()

@@ -17,6 +17,7 @@ def log_err(e, filename):
         log_file.write(str(datetime.datetime.now()))
         log_file.write(f'\n{traceback.format_exc()}\n\n')
 
+    # bad practise?
     tg.send_message('166240669', f'{datetime.datetime.now()}\n' +
                     f'{traceback.format_exc()}', html=False)
 
