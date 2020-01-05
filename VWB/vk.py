@@ -97,6 +97,11 @@ def parse_attachments(item, post):
     item -- Post from VK API newsfeed.get method response
     post -- Post object
     """
+    videos_count = len(
+        [attach for attach in item['attachments'] if attach['type'] == 'video']
+    )
+    delay_video_requests = True if videos_count > 3 else False
+
     for attachment in item['attachments']:
         if attachment['type'] == 'photo':
             for size in reversed(attachment['photo']['sizes']):
@@ -106,7 +111,9 @@ def parse_attachments(item, post):
                     post.photos.append(size['url'])
                     break
         elif attachment['type'] == 'video':
-            post.videos.append(parse_video(attachment['video']))
+            post.videos.append(
+                parse_video(attachment['video'], delay_video_requests)
+            )
         elif attachment['type'] == 'doc' and attachment['doc']['size'] < 10**7:
             post.docs.append(attachment['doc']['url'])
         elif attachment['type'] == 'link':
@@ -121,7 +128,7 @@ def parse_attachments(item, post):
             post.has_photos_list = True
 
 
-def parse_video(video):
+def parse_video(video, delay_video_requests=False):
     """
     Return video url from VK video object.
 
@@ -131,11 +138,15 @@ def parse_video(video):
     url = (f'{VK_BASE_URL}video.get?owner_id={video["owner_id"]}' +
            f'&videos={video["owner_id"]}_{video["id"]}_{video["access_key"]}' +
            f'&count=1&extended=0&v=5.80&access_token={VK_ACCESS_TOKEN}')
+
+    if delay_video_requests:
+        time.sleep(0.5)
+
     try:
         video_obj = requests.get(url).json()['response']['items'][0]
     except KeyError as e:
         tools.log_err(e, 'errors.log')
-        return url
+        return '[FAILED TO GET VIDEO URL]'
 
     video_url = video_obj['player']
     try:
